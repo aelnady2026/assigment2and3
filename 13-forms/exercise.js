@@ -24,9 +24,9 @@
  * @returns {{ name: string, price: number }}
  */
 export function readForm() {
-  // TODO: read .value off each input. Trim the name, and convert the price
-  // with Number().
-  throw new Error("readForm is not written yet");
+  const name = document.getElementById("name").value.trim();
+  const price = Number(document.getElementById("price").value);
+  return { name, price };
 }
 
 /**
@@ -35,8 +35,8 @@ export function readForm() {
  * @returns {void}
  */
 export function clearForm() {
-  // TODO: set each input's .value to an empty string.
-  throw new Error("clearForm is not written yet");
+  document.getElementById("name").value = "";
+  document.getElementById("price").value = "";
 }
 
 /**
@@ -52,9 +52,24 @@ export function clearForm() {
  * @returns {void}
  */
 export function renderList(items) {
-  // TODO: empty #list first, then build one card per item — the same card
-  // shape as module 12.
-  throw new Error("renderList is not written yet");
+  const list = document.getElementById("list");
+  list.innerHTML = "";
+
+  for (const item of items) {
+    const li = document.createElement("li");
+    li.className = "card";
+
+    const h3 = document.createElement("h3");
+    h3.textContent = item.name;
+
+    const p = document.createElement("p");
+    p.className = "price";
+    p.textContent = `${item.price} EGP`;
+
+    li.appendChild(h3);
+    li.appendChild(p);
+    list.appendChild(li);
+  }
 }
 
 /**
@@ -86,4 +101,29 @@ export function renderList(items) {
  * Remember `export`.
  */
 
-// TODO: write wireForm here.
+export function wireForm() {
+  const form = document.getElementById("product-form");
+  const error = document.getElementById("error");
+  const items = [];
+
+  form.addEventListener("submit", (event) => {
+    event.preventDefault();
+
+    const { name, price } = readForm();
+
+    if (!name) {
+      error.textContent = "Give the product a name.";
+      return;
+    }
+
+    if (!(price > 0)) {
+      error.textContent = "Give the product a price.";
+      return;
+    }
+
+    error.textContent = "";
+    items.push({ name, price });
+    renderList(items);
+    clearForm();
+  });
+}
